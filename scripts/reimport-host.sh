@@ -12,7 +12,7 @@ SCRIPTHOST=$1
 FILE=${SCRIPTHOST}_old.txt
 
 aq show host --hostname $SCRIPTHOST >> $FILE
-SYSTEMID=$(aq show host --hostname $SCRIPTHOST | grep system | sed -n "s/Machine: \(.*\)$/\1/p")
+SYSTEMID=$(aq show host --hostname $SCRIPTHOST | sed -n "s/Machine: \(.*\)$/\1/p")
 VLAN_NAME=$(aq show host --hostname $SCRIPTHOST | grep "Interface: vlan" | cut -d ' ' -f 4)
 VLAN_MAC_ADDRESS=$(aq show host --hostname $SCRIPTHOST | grep "Interface: vlan" | cut -d ' ' -f 5)
 VLAN_IP_ADDRESS=$(aq show host --hostname $SCRIPTHOST | grep "Provides: " | grep vlan | cut -d '[' -f 2 | tr -d '[]')
@@ -44,5 +44,5 @@ aq del_machine --machine $SYSTEMID
 echo "Machine deleted..."
 
 echo "Importing ${SCRIPTHOST}"
-netbox2aquilon --hostname $SCRIPTHOST --archetype cloud --domain prod --archetype cloud --osname rocky --osversion 9x-x86_64
+netbox2aquilon --hostname $SCRIPTHOST --archetype cloud --domain prod --osname rocky --osversion 9
 aq update_interface --hostname $SCRIPTHOST --interface eth0 --boot --default_route
